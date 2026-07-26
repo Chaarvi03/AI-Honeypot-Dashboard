@@ -125,7 +125,7 @@ AI-Honeypot-Dashboard
 
 ## Attack Logs Table
 
-![Attack Logs Table](screenshots/table.png)
+![Attack Logs Table](screenshots/attack_table.png)
 
 ---
 
