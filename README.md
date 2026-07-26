@@ -113,19 +113,19 @@ AI-Honeypot-Dashboard
 
 ## Dashboard Overview
 
-![Dashboard Overview](screenshots/dashboard.png)
+![Dashboard Overview](screenshots/main_dashboard.png)
 
 ---
 
 ## Main Dashboard
 
-![Main Dashboard](screenshots/mainpage.png)
+![Main Dashboard](screenshots/main_page.png)
 
 ---
 
 ## Attack Logs Table
 
-![Attack Logs Table](screenshots/attack_table.png)
+![Attack Logs Table](screenshots/main_attack_table.png)
 
 ---
 
