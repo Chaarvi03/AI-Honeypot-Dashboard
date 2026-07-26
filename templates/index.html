@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Honeypot Dashboard</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body{
+            font-family: Arial;
+            background:#111;
+            color:white;
+            margin:40px;
+        }
+
+        h1{
+            color:#00ff99;
+        }
+
+        form{
+            margin-bottom:20px;
+        }
+
+        input{
+            padding:10px;
+            width:300px;
+            border:none;
+            border-radius:5px;
+            font-size:16px;
+        }
+
+        button{
+            padding:10px 20px;
+            cursor:pointer;
+            margin-left:10px;
+        }
+
+        .cards{
+            display:flex;
+            gap:20px;
+            flex-wrap:wrap;
+            margin:25px 0;
+        }
+
+        .card{
+            background:#222;
+            padding:20px;
+            border-radius:10px;
+            min-width:160px;
+            text-align:center;
+        }
+
+        .card h3{
+            margin:0;
+            color:#ccc;
+        }
+
+        .card h2{
+            margin-top:10px;
+        }
+
+        .charts{
+            display:flex;
+            justify-content:space-around;
+            flex-wrap:wrap;
+            margin-top:40px;
+            gap:40px;
+        }
+
+        .chart-box{
+            width:450px;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:40px;
+        }
+
+        th,td{
+            border:1px solid gray;
+            padding:12px;
+        }
+
+        th{
+            background:#222;
+        }
+
+        tr:nth-child(even){
+            background:#1d1d1d;
+        }
+
+        canvas{
+            background:#fff;
+            border-radius:10px;
+            padding:10px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+<h1>AI Honeypot Dashboard</h1>
+
+<form method="GET">
+    <input
+        type="text"
+        name="search"
+        placeholder="Search by IP, Command or Risk"
+        value="{{ search }}"
+    >
+
+    <button type="submit">
+        Search
+    </button>
+</form>
+
+<div class="cards">
+
+    <div class="card">
+        <h3>Total Attacks</h3>
+        <h2>{{ total }}</h2>
+    </div>
+
+    <div class="card">
+        <h3>Unique IPs</h3>
+        <h2>{{ unique_ips }}</h2>
+    </div>
+
+    <div class="card">
+        <h3>Low Risk</h3>
+        <h2 style="color:lime;">{{ low }}</h2>
+    </div>
+
+    <div class="card">
+        <h3>Medium Risk</h3>
+        <h2 style="color:orange;">{{ medium }}</h2>
+    </div>
+
+    <div class="card">
+        <h3>High Risk</h3>
+        <h2 style="color:red;">{{ high }}</h2>
+    </div>
+
+</div>
+
+<div class="charts">
+
+    <div class="chart-box">
+        <h2>Risk Distribution</h2>
+        <canvas id="riskChart"></canvas>
+    </div>
+
+    <div class="chart-box">
+        <h2>Most Executed Commands</h2>
+        <canvas id="commandChart"></canvas>
+    </div>
+
+</div>
+
+<br>
+
+<input
+    type="text"
+    id="search"
+    placeholder="Quick Filter Table..."
+>
+
+<table>
+
+<thead>
+
+<tr>
+    <th>Timestamp</th>
+    <th>IP</th>
+    <th>Command</th>
+    <th>Risk</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for attack in attacks %}
+
+<tr>
+
+<td>{{ attack[0] }}</td>
+
+<td>{{ attack[1] }}</td>
+
+<td>{{ attack[2] }}</td>
+
+<td>
+
+{% if attack[3] == "LOW" %}
+
+<span style="color:lime;font-weight:bold;">🟢 LOW</span>
+
+{% elif attack[3] == "MEDIUM" %}
+
+<span style="color:orange;font-weight:bold;">🟡 MEDIUM</span>
+
+{% else %}
+
+<span style="color:red;font-weight:bold;">🔴 HIGH</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+<script>
+
+// ---------------- Quick Filter ----------------
+
+const search = document.getElementById("search");
+
+search.addEventListener("keyup", function(){
+
+    const value = this.value.toLowerCase();
+
+    const rows = document.querySelectorAll("tbody tr");
+
+    rows.forEach(function(row){
+
+        const text = row.innerText.toLowerCase();
+
+        row.style.display = text.includes(value) ? "" : "none";
+
+    });
+
+});
+
+// ---------------- Risk Pie Chart ----------------
+
+new Chart(document.getElementById("riskChart"),{
+
+    type:"pie",
+
+    data:{
+
+        labels:["Low","Medium","High"],
+
+        datasets:[{
+
+            data:[
+                {{ low }},
+                {{ medium }},
+                {{ high }}
+            ]
+
+        }]
+    }
+
+});
+
+// ---------------- Command Bar Chart ----------------
+
+new Chart(document.getElementById("commandChart"),{
+
+    type:"bar",
+
+    data:{
+
+        labels: {{ labels|tojson }},
+
+        datasets:[{
+
+            label:"Executions",
+
+            data: {{ values|tojson }}
+
+        }]
+    },
+
+    options:{
+        responsive:true,
+        scales:{
+            y:{
+                beginAtZero:true
+            }
+        }
+    }
+
+});
+
+// ---------------- Auto Refresh ----------------
+
+setTimeout(function(){
+
+    location.reload();
+
+},5000);
+
+</script>
+
+</body>
+</html>

@@ -4,9 +4,35 @@ import sqlite3
 LOG_FILE = "docker/cowrie/var/log/cowrie/cowrie.json"
 DB_FILE = "data/attacks.db"
 
-LOW = ["whoami", "pwd", "ls", "cat", "exit", "uname"]
-MEDIUM = ["wget", "curl", "chmod", "scp"]
-HIGH = ["bash", "python", "nc", "rm", "perl"]
+# Threat Classification
+HIGH = [
+    "wget",
+    "curl",
+    "chmod",
+    "sudo",
+    "rm",
+    "rm -rf",
+    "nc",
+    "python",
+    "bash",
+    "perl"
+]
+
+MEDIUM = [
+    "cat",
+    "uname",
+    "ifconfig",
+    "netstat",
+    "ps",
+    "scp"
+]
+
+LOW = [
+    "pwd",
+    "ls",
+    "whoami",
+    "exit"
+]
 
 conn = sqlite3.connect(DB_FILE)
 cursor = conn.cursor()
@@ -30,17 +56,27 @@ with open(LOG_FILE, "r") as file:
             ip = event["src_ip"]
             timestamp = event["timestamp"]
 
-            first = cmd.split()[0]
+            # Default Risk
+            risk = "LOW"
 
-            if first in HIGH:
-                risk = "HIGH"
-            elif first in MEDIUM:
-                risk = "MEDIUM"
-            else:
-                risk = "LOW"
+            # Check High Risk Commands
+            for word in HIGH:
+                if word in cmd:
+                    risk = "HIGH"
+                    break
+
+            # Check Medium Risk Commands
+            if risk == "LOW":
+                for word in MEDIUM:
+                    if word in cmd:
+                        risk = "MEDIUM"
+                        break
 
             cursor.execute(
-                "INSERT INTO attacks(timestamp, ip, command, risk) VALUES (?, ?, ?, ?)",
+                """
+                INSERT INTO attacks(timestamp, ip, command, risk)
+                VALUES (?, ?, ?, ?)
+                """,
                 (timestamp, ip, cmd, risk)
             )
 
