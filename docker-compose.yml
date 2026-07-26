@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  cowrie:
+    image: cowrie/cowrie:latest
+    container_name: cowrie
+    restart: unless-stopped
+
+    ports:
+      - "2222:2222"
+
+    volumes:
+      - ./docker/cowrie/etc:/cowrie/cowrie-git/etc
+      - ./docker/cowrie/var:/cowrie/cowrie-git/var

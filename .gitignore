@@ -4,3 +4,16 @@ __pycache__/
 .env
 .vscode/
 .DS_Store
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Cowrie runtime files
+docker/cowrie/var/lib/cowrie/ssh_host_*
+docker/cowrie/var/lib/cowrie/tty/
+docker/cowrie/var/log/
+docker/cowrie/var/lib/cowrie/uuid
+
+# macOS
+.DS_Store
