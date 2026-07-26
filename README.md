@@ -1,42 +1,42 @@
 # 🛡️ AI Honeypot Dashboard
 
-A Flask-based cybersecurity dashboard that visualizes attack data collected from a Cowrie SSH Honeypot. The project parses honeypot logs, stores attack information in SQLite, classifies threats based on executed commands, and presents real-time insights through an interactive dashboard.
+A Flask-based cybersecurity dashboard that visualizes attack data collected from a Cowrie SSH Honeypot. The project captures SSH attack logs, stores them in an SQLite database, classifies attacks based on executed commands, and presents real-time insights through an interactive web dashboard built with Flask.
 
 ---
 
-## 📌 Project Overview
+# 📌 Project Overview
 
-Cyber attackers often scan and interact with exposed SSH servers. This project simulates a vulnerable SSH server using the **Cowrie Honeypot** to capture attacker activity.
+Cyber attackers frequently scan the internet for vulnerable SSH servers. This project deploys a **Cowrie SSH Honeypot** to simulate an SSH server and capture attacker activity.
 
-The captured logs are processed using Python, stored in an SQLite database, and displayed through a Flask web application with an interactive dashboard.
+The captured JSON logs are parsed using Python, stored in SQLite, and displayed through a Flask dashboard featuring statistics, search, filtering, and interactive charts.
 
 ---
 
-## 🚀 Features
+# 🚀 Features
 
-- 📡 Collects attack logs from Cowrie Honeypot
-- 🗄 Stores attack data in SQLite database
-- ⚠️ Command-based risk classification
+- 📡 Collects attack logs from Cowrie SSH Honeypot
+- 🗄️ Stores parsed logs in SQLite
+- ⚠️ Classifies commands into:
   - 🟢 Low Risk
   - 🟡 Medium Risk
   - 🔴 High Risk
-- 📊 Dashboard statistics
+- 📊 Dashboard Statistics
   - Total Attacks
   - Unique IP Addresses
   - Risk Summary
 - 🥧 Risk Distribution Pie Chart
-- 📈 Most Executed Commands Bar Chart
-- 🔍 Search attacks by:
+- 📈 Most Executed Commands Chart
+- 🔍 Search by:
   - IP Address
   - Command
   - Risk Level
 - ⚡ Quick Filter Table
-- 🔄 Auto-refresh Dashboard (every 5 seconds)
-- 🌙 Modern Dark Theme UI
+- 🔄 Auto Refresh (every 5 seconds)
+- 🌙 Dark Theme Dashboard
 
 ---
 
-## 🛠️ Tech Stack
+# 🛠️ Tech Stack
 
 | Technology | Purpose |
 |------------|---------|
@@ -46,16 +46,16 @@ The captured logs are processed using Python, stored in an SQLite database, and 
 | HTML | Frontend |
 | CSS | Styling |
 | JavaScript | Client-side Logic |
-| Chart.js | Dashboard Charts |
-| Cowrie Honeypot | Attack Collection |
+| Chart.js | Charts & Visualisation |
+| Cowrie Honeypot | SSH Attack Collection |
 | Docker | Honeypot Deployment |
 
 ---
 
-## 📂 Project Structure
+# 📂 Project Structure
 
-```
-AI-HONEYPOT-LAB
+```text
+AI-Honeypot-Dashboard
 │
 ├── app/
 │   ├── api.py
@@ -71,8 +71,10 @@ AI-HONEYPOT-LAB
 ├── docker/
 │   └── cowrie/
 │
-├── docs/
-│   └── screenshots/
+├── screenshots/
+│   ├── dashboard.png
+│   ├── mainpage.png
+│   └── table.png
 │
 ├── requirements.txt
 ├── docker-compose.yml
@@ -81,83 +83,71 @@ AI-HONEYPOT-LAB
 
 ---
 
-## 🏗️ System Architecture
+# 🏗️ System Architecture
 
-```
-                Internet
-
-                    │
-
-                    ▼
-
-          Cowrie SSH Honeypot
-                    │
-                    ▼
+```text
+               Internet
+                   │
+                   ▼
+         Cowrie SSH Honeypot
+                   │
+                   ▼
           Honeypot JSON Logs
-                    │
-                    ▼
-          Python Log Parser
-                    │
-                    ▼
+                   │
+                   ▼
+           Python Log Parser
+                   │
+                   ▼
             SQLite Database
-                    │
-                    ▼
-             Flask Backend API
-                    │
-                    ▼
-         AI Honeypot Dashboard
+                   │
+                   ▼
+            Flask Backend API
+                   │
+                   ▼
+        AI Honeypot Dashboard
 ```
 
 ---
 
-## 📸 Screenshots
+# 📸 Screenshots
 
-### Dashboard
+## Dashboard Overview
 
-> Add your dashboard screenshot here.
-
-Example:
-
-```
-docs/dashboard.png
-```
+![Dashboard Overview](screenshots/dashboard.png)
 
 ---
 
-### Risk Distribution
+## Main Dashboard
 
-> Add pie chart screenshot.
-
----
-
-### Search Functionality
-
-> Add search feature screenshot.
+![Main Dashboard](screenshots/mainpage.png)
 
 ---
 
-## ⚠️ Threat Classification
+## Attack Logs Table
 
-### 🟢 Low Risk
+![Attack Logs Table](screenshots/table.png)
+
+---
+
+# ⚠️ Threat Classification
+
+## 🟢 Low Risk
 
 - whoami
 - pwd
 - ls
-- exit
-
----
-
-### 🟡 Medium Risk
-
-- uname
 - cat
+- exit
+- uname
+
+## 🟡 Medium Risk
+
 - wget
 - curl
 - chmod
+- scp
 
----
-
-### 🔴 High Risk
+## 🔴 High Risk
 
 - bash
 - python
@@ -167,57 +157,46 @@ docs/dashboard.png
 
 ---
 
-## ⚙️ Installation
+# ⚙️ Installation
 
-### Clone Repository
+## Clone Repository
 
 ```bash
-git clone https://github.com/yourusername/AI-Honeypot-Dashboard.git
-
+git clone https://github.com/Chaarvi03/AI-Honeypot-Dashboard.git
 cd AI-Honeypot-Dashboard
 ```
 
----
-
-### Create Virtual Environment
+## Create Virtual Environment
 
 ```bash
 python3 -m venv .venv
 ```
 
-Activate
-
-macOS/Linux
+### macOS / Linux
 
 ```bash
 source .venv/bin/activate
 ```
 
-Windows
+### Windows
 
 ```bash
 .venv\Scripts\activate
 ```
 
----
-
-### Install Dependencies
+## Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
----
-
-### Run the Flask Application
+## Run the Application
 
 ```bash
 python app/api.py
 ```
 
----
-
-Open your browser
+Open your browser:
 
 ```
 http://127.0.0.1:5000
@@ -225,7 +204,7 @@ http://127.0.0.1:5000
 
 ---
 
-## 📊 Dashboard Statistics
+# 📊 Dashboard Statistics
 
 The dashboard displays:
 
@@ -234,32 +213,32 @@ The dashboard displays:
 - Low Risk Attacks
 - Medium Risk Attacks
 - High Risk Attacks
-- Risk Distribution
+- Risk Distribution Chart
 - Most Executed Commands
 
 ---
 
-## 🔍 Search
+# 🔍 Search
 
-Users can search attacks by:
+Search attacks using:
 
 - IP Address
 - Command
 - Risk Level
 
-The dashboard updates instantly with matching results.
+The table updates instantly with matching results.
 
 ---
 
-## 🔄 Auto Refresh
+# 🔄 Auto Refresh
 
-The dashboard refreshes every **5 seconds** to display newly captured attacks.
+The dashboard automatically refreshes every **5 seconds** to display newly captured attacks.
 
 ---
 
-## 🎯 Future Improvements
+# 🎯 Future Improvements
 
-- Machine Learning based attack detection
+- Machine Learning based threat detection
 - Live WebSocket updates
 - Geographic attack map
 - User authentication
@@ -270,9 +249,9 @@ The dashboard refreshes every **5 seconds** to display newly captured attacks.
 
 ---
 
-## 👨‍💻 Author
+# 👨‍💻 Author
 
-**Chaarvi**
+**Chaarvi Noolu**
 
 Artificial Intelligence & Data Science Student
 
@@ -280,6 +259,6 @@ CMR Institute of Technology
 
 ---
 
-## 📜 License
+# 📜 License
 
 This project is developed for educational and cybersecurity learning purposes.
