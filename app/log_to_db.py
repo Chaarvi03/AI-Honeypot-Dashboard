@@ -1,10 +1,14 @@
 import json
 import sqlite3
+import os
 
 LOG_FILE = "docker/cowrie/var/log/cowrie/cowrie.json"
 DB_FILE = "data/attacks.db"
 
+# -------------------------------
 # Threat Classification
+# -------------------------------
+
 HIGH = [
     "wget",
     "curl",
@@ -34,53 +38,85 @@ LOW = [
     "exit"
 ]
 
-conn = sqlite3.connect(DB_FILE)
-cursor = conn.cursor()
 
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS attacks (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    timestamp TEXT,
-    ip TEXT,
-    command TEXT,
-    risk TEXT
-)
-""")
+def classify_risk(cmd):
+    """Return the risk level of a command."""
 
-with open(LOG_FILE, "r") as file:
-    for line in file:
-        event = json.loads(line)
+    cmd = cmd.lower()
 
-        if event.get("eventid") == "cowrie.command.input":
-            cmd = event["input"]
-            ip = event["src_ip"]
-            timestamp = event["timestamp"]
+    for word in HIGH:
+        if word in cmd:
+            return "HIGH"
 
-            # Default Risk
-            risk = "LOW"
+    for word in MEDIUM:
+        if word in cmd:
+            return "MEDIUM"
 
-            # Check High Risk Commands
-            for word in HIGH:
-                if word in cmd:
-                    risk = "HIGH"
-                    break
+    return "LOW"
 
-            # Check Medium Risk Commands
-            if risk == "LOW":
-                for word in MEDIUM:
-                    if word in cmd:
-                        risk = "MEDIUM"
-                        break
 
-            cursor.execute(
-                """
+def update_database():
+
+    if not os.path.exists(LOG_FILE):
+        print("Cowrie log file not found.")
+        return
+
+    conn = sqlite3.connect(DB_FILE)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS attacks(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            timestamp TEXT,
+            ip TEXT,
+            command TEXT,
+            risk TEXT
+        )
+    """)
+
+    with open(LOG_FILE, "r") as file:
+
+        for line in file:
+
+            try:
+                event = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+
+            if event.get("eventid") != "cowrie.command.input":
+                continue
+
+            cmd = event.get("input", "").strip()
+
+            # Skip blank commands
+            if not cmd:
+                continue
+
+            ip = event.get("src_ip", "")
+            timestamp = event.get("timestamp", "")
+
+            risk = classify_risk(cmd)
+
+            # Prevent duplicate entries
+            cursor.execute("""
+                SELECT id
+                FROM attacks
+                WHERE timestamp=? AND ip=? AND command=?
+            """, (timestamp, ip, cmd))
+
+            if cursor.fetchone():
+                continue
+
+            cursor.execute("""
                 INSERT INTO attacks(timestamp, ip, command, risk)
                 VALUES (?, ?, ?, ?)
-                """,
-                (timestamp, ip, cmd, risk)
-            )
+            """, (timestamp, ip, cmd, risk))
 
-conn.commit()
-conn.close()
+    conn.commit()
+    conn.close()
 
-print("Attack data stored successfully!")
+    print("Database updated successfully!")
+
+
+if __name__ == "__main__":
+    update_database()

@@ -38,17 +38,17 @@ The captured JSON logs are parsed using Python, stored in SQLite, and displayed 
 
 # 🛠️ Tech Stack
 
-| Technology | Purpose |
-|------------|---------|
-| Python | Backend |
-| Flask | Web Framework |
-| SQLite | Database |
-| HTML | Frontend |
-| CSS | Styling |
-| JavaScript | Client-side Logic |
-| Chart.js | Charts & Visualisation |
-| Cowrie Honeypot | SSH Attack Collection |
-| Docker | Honeypot Deployment |
+| Technology      | Purpose                |
+| --------------- | ---------------------- |
+| Python          | Backend                |
+| Flask           | Web Framework          |
+| SQLite          | Database               |
+| HTML            | Frontend               |
+| CSS             | Styling                |
+| JavaScript      | Client-side Logic      |
+| Chart.js        | Charts & Visualisation |
+| Cowrie Honeypot | SSH Attack Collection  |
+| Docker          | Honeypot Deployment    |
 
 ---
 
@@ -106,26 +106,6 @@ AI-Honeypot-Dashboard
                    ▼
         AI Honeypot Dashboard
 ```
-
----
-
-# 📸 Screenshots
-
-## Dashboard Overview
-
-![Dashboard Overview](screenshots/main_dashboard.png)
-
----
-
-## Main Dashboard
-
-![Main Dashboard](screenshots/main_page.png)
-
----
-
-## Attack Logs Table
-
-![Attack Logs Table](screenshots/main_attack_table.png)
 
 ---
 

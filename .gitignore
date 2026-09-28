@@ -1,20 +1,18 @@
-data/*.db
 .venv/
 __pycache__/
 *.pyc
+.DS_Store
+
 .env
-.vscode/
-.DS_Store
-# Python
-.venv/
-__pycache__/
-*.pyc
+.env.*
 
-# Cowrie runtime files
-docker/cowrie/var/lib/cowrie/ssh_host_*
-docker/cowrie/var/lib/cowrie/tty/
+*.db
+*.sqlite
+*.sqlite3
+
+# Cowrie runtime data
 docker/cowrie/var/log/
+docker/cowrie/var/lib/cowrie/tty/
+docker/cowrie/var/lib/cowrie/downloads/
+docker/cowrie/var/lib/cowrie/ssh_host_*
 docker/cowrie/var/lib/cowrie/uuid
-
-# macOS
-.DS_Store

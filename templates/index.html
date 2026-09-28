@@ -57,6 +57,7 @@
 
         .card h2{
             margin-top:10px;
+            word-break: break-word;
         }
 
         .charts{
@@ -101,7 +102,7 @@
 
 <body>
 
-<h1>AI Honeypot Dashboard</h1>
+<h1>🛡️ AI Honeypot Dashboard</h1>
 
 <form method="GET">
     <input
@@ -143,6 +144,21 @@
         <h2 style="color:red;">{{ high }}</h2>
     </div>
 
+    <div class="card">
+        <h3>Latest Attack</h3>
+        <h2>{{ latest_attack }}</h2>
+    </div>
+
+    <div class="card">
+        <h3>Top Attacking IP</h3>
+        <h2>{{ top_ip }}</h2>
+    </div>
+
+    <div class="card">
+        <h3>Top Command</h3>
+        <h2>{{ top_command }}</h2>
+    </div>
+
 </div>
 
 <div class="charts">
@@ -157,6 +173,16 @@
         <canvas id="commandChart"></canvas>
     </div>
 
+    <div class="chart-box">
+        <h2>Top Attacking IPs</h2>
+        <canvas id="ipChart"></canvas>
+    </div>
+
+    <div class="chart-box">
+        <h2>Attack Timeline</h2>
+        <canvas id="timelineChart"></canvas>
+    </div>
+
 </div>
 
 <br>
@@ -167,15 +193,15 @@
     placeholder="Quick Filter Table..."
 >
 
-<table>
+<table id="attackTable">
 
 <thead>
 
 <tr>
     <th>Timestamp</th>
-    <th>IP</th>
+    <th>IP Address</th>
     <th>Command</th>
-    <th>Risk</th>
+    <th>Risk Level</th>
 </tr>
 
 </thead>
@@ -256,6 +282,12 @@ new Chart(document.getElementById("riskChart"),{
                 {{ low }},
                 {{ medium }},
                 {{ high }}
+            ],
+
+            backgroundColor:[
+                "#2ecc71",
+                "#f39c12",
+                "#e74c3c"
             ]
 
         }]
@@ -277,7 +309,79 @@ new Chart(document.getElementById("commandChart"),{
 
             label:"Executions",
 
-            data: {{ values|tojson }}
+            data: {{ values|tojson }},
+
+            backgroundColor:"#00bfff"
+
+        }]
+    },
+
+    options:{
+        responsive:true,
+        plugins:{
+            legend:{display:false}
+        },
+        scales:{
+            y:{
+                beginAtZero:true
+            }
+        }
+    }
+
+});
+
+new Chart(document.getElementById("ipChart"),{
+
+    type:"bar",
+
+    data:{
+
+        labels: {{ ip_labels|tojson }},
+
+        datasets:[{
+
+            label:"Attacks",
+
+            data: {{ ip_values|tojson }},
+
+            backgroundColor:"#ff6384"
+
+        }]
+    },
+
+    options:{
+        responsive:true,
+        plugins:{
+            legend:{display:false}
+        },
+        scales:{
+            y:{
+                beginAtZero:true
+            }
+        }
+    }
+
+});
+
+new Chart(document.getElementById("timelineChart"),{
+
+    type:"line",
+
+    data:{
+
+        labels: {{ time_labels|tojson }},
+
+        datasets:[{
+
+            label:"Attacks",
+
+            data: {{ time_values|tojson }},
+
+            borderColor:"#00ff99",
+
+            fill:false,
+
+            tension:0.3
 
         }]
     },
